@@ -95,10 +95,15 @@ namespace Game_cubs
                 do
                 {
                     Console.Write("x(Вертикально): ");
-                    x1 = Convert.ToInt32(Console.ReadLine());
+                    while (!int.TryParse(Console.ReadLine(), out x1))
+                    {
+                        Console.Write("Введено не число! x(Вертикально): ");
+                    }
                     Console.Write("y(Горизантально): ");
-                    y1 = Convert.ToInt32(Console.ReadLine());
-
+                    while (!int.TryParse(Console.ReadLine(), out y1))
+                    {
+                        Console.Write("Введено не число! y(Горизантально): ");
+                    }
                 } while (CheckPole(player, x1, y1));
             }
 
