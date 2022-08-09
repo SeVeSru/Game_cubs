@@ -1,23 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Game_cubs
 {
     internal class Program
     {
-        const int x = 25; //Размер поля
-        const int y = 25;
-        const string player1Str = "O";//Метка игрока 1
-        const string player2Str = "X";//Метка игрока 2
-        const string fieldStr = "#";//Метка пустого поля
+        const int x = 6; //Размер поля
+        const int y = 6;
+        const string player1Str = "O ";//Метка игрока 1
+        const string player2Str = "X ";//Метка игрока 2
+        const string fieldStr = "# ";//Метка пустого поля
         static int[,] Pole = new int[x, y];
         static int round = 0;
+        const int maxvin = x * y;
+        static int polewin = 0;
+        static int player1win = 0;
+        static int player2win = 0;
 
         static void Main(string[] args)
         {
+            bool win = true;
             Random random = new Random();
 
             for (int i = 0; i < x; i++)
@@ -28,27 +29,52 @@ namespace Game_cubs
                 }
             }
 
-            
+
             do
             {
                 int x = random.Next(1, 7), y = random.Next(1, 7);
-                InterfaceMove(round%2+1, x, y);
+                InterfaceMove(round % 2 + 1, x, y);
                 Console.ReadKey();
                 round++;
-            } while (true);
+                if (polewin == 0)
+                {
+                    Console.Clear();
+                    PoleOut();
+                    if (player1win > player2win)
+                        Console.WriteLine("Выйграл 1 игрок");
+                    else
+                        Console.WriteLine("Выйграл 2 игрок");
+                    win = false;
+
+                }
+            } while (win);
+            Console.WriteLine("игра закончилась");
+            Console.ReadKey();
         }
         static void PoleOut()
         {
+            player1win = 0;
+            player2win = 0;
+            polewin = 0;
             for (int i = 0; i < x; i++)
             {
                 for (int j = 0; j < y; j++)
                 {
-                        if (Pole[i, j] == 0)
-                            Console.Write(fieldStr);
-                        else if (Pole[i, j] == 1)
-                            Console.Write(player1Str);
-                        else if (Pole[i, j] == 2)
-                            Console.Write(player2Str);
+                    if (Pole[i, j] == 0)
+                    {
+                        Console.Write(fieldStr);
+                        polewin++;
+                    }
+                    else if (Pole[i, j] == 1)
+                    {
+                        Console.Write(player1Str);
+                        player1win++;
+                    }
+                    else if (Pole[i, j] == 2)
+                    {
+                        Console.Write(player2Str);
+                        player2win++;
+                    }
                 }
                 Console.WriteLine();
             }
@@ -75,24 +101,28 @@ namespace Game_cubs
 
                 } while (CheckPole(player, x1, y1));
             }
-            
+
             Console.WriteLine();
-            if (player == 1)
-                for (int i = x1; i < x1 + rx; i++)
-                {
-                    for (int j = y1; j < y1 + ry; j++)
+            try
+            {
+                if (player == 1)
+                    for (int i = x1; i < x1 + rx; i++)
                     {
-                        Pole[i, j] = player;
+                        for (int j = y1; j < y1 + ry; j++)
+                        {
+                            if (Pole[i,j]==0) Pole[i, j] = player;
+                        }
                     }
-                }
-            else if (player == 2)
-                for (int i = x1; i < x1 + rx; i++)
-                {
-                    for (int j = y1; j < y1 + ry; j++)
+                else if (player == 2)
+                    for (int i = x1; i < x1 + rx; i++)
                     {
-                        Pole[x-1-i, y-1-j] = player;
+                        for (int j = y1; j < y1 + ry; j++)
+                        {
+                            if (Pole[x - 1 - i, y - 1 - j] == 0) Pole[x - 1 - i, y - 1 - j] = player;
+                        }
                     }
-                }
+            }
+            catch { }
         }
         static bool CheckPole(int player, int rx, int ry)
         {
@@ -113,7 +143,7 @@ namespace Game_cubs
                     if (Pole[x - 1 - rx, y - 1 - ry + 1] == player) return false;
                     if (Pole[x - 1 - rx - 1, y - 1 - ry] == player) return false;
                     if (Pole[x - 1 - rx, y - 1 - ry - 1] == player) return false;
-                } 
+                }
             }
             catch
             {
