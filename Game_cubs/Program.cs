@@ -14,7 +14,7 @@ namespace Game_cubs
         const string player2Str = "X";//Метка игрока 2
         const string fieldStr = "#";//Метка пустого поля
         static int[,] Pole = new int[x, y];
-        static int round = 2;
+        static int round = 0;
 
         static void Main(string[] args)
         {
@@ -27,19 +27,14 @@ namespace Game_cubs
                     Pole[i, j] = 0;
                 }
             }
-            //PoleOut();
 
             
             do
             {
-                if (round == 1)
-                    round++;
-                else round = 1;
-
                 int x = random.Next(1, 7), y = random.Next(1, 7);
-                InterfaceMove(round, x, y);
+                InterfaceMove(round%2+1, x, y);
                 Console.ReadKey();
-
+                round++;
             } while (true);
         }
         static void PoleOut()
@@ -65,12 +60,18 @@ namespace Game_cubs
             Console.Clear();
 
             PoleOut();
+            Console.WriteLine("Игрок: " + player);
             Console.WriteLine("Вам выпало: " + rx + ", и " + ry);
-
-            Console.Write("Выберите позицию: \nx(Вертикально): ");
-            x1 = Convert.ToInt32(Console.ReadLine());
-            Console.Write("y(Горизантально): ");
-            y1 = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Выберите позицию: ");
+            do
+            {
+                Console.Write("x(Вертикально): ");
+                x1 = Convert.ToInt32(Console.ReadLine());
+                Console.Write("y(Горизантально): ");
+                y1 = Convert.ToInt32(Console.ReadLine());
+                
+            } while (CheckPole(player,x1,y1));
+            
             Console.WriteLine();
             if (player == 1)
                 for (int i = x1; i < x1 + rx; i++)
@@ -88,6 +89,24 @@ namespace Game_cubs
                         Pole[x-1-i, y-1-j] = player;
                     }
                 }
+        }
+        static bool CheckPole(int player, int rx, int ry)
+        {
+            if ((round == 0 || round == 1) && rx == 0 && ry == 0) return false;
+            try
+            {
+                if (Pole[rx, ry] == player) return false;
+                if (Pole[rx+1, ry] == player) return false;
+                if (Pole[rx, ry+1] == player) return false;
+                if (Pole[rx-1, ry] == player) return false;
+                if (Pole[rx, ry-1] == player) return false;
+            }
+            catch
+            {
+                Console.WriteLine("За пределами массива!");
+            }
+            Console.WriteLine("Позиция не прилигает к вашей территории");
+            return true;
         }
     }
 }
