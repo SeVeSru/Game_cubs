@@ -62,15 +62,19 @@ namespace Game_cubs
             PoleOut();
             Console.WriteLine("Игрок: " + player);
             Console.WriteLine("Вам выпало: " + rx + ", и " + ry);
-            Console.WriteLine("Выберите позицию: ");
-            do
+            if (round == 0 || round == 1) { x1 = 0; y1 = 0; }
+            else
             {
-                Console.Write("x(Вертикально): ");
-                x1 = Convert.ToInt32(Console.ReadLine());
-                Console.Write("y(Горизантально): ");
-                y1 = Convert.ToInt32(Console.ReadLine());
-                
-            } while (CheckPole(player,x1,y1));
+                Console.WriteLine("Выберите позицию: ");
+                do
+                {
+                    Console.Write("x(Вертикально): ");
+                    x1 = Convert.ToInt32(Console.ReadLine());
+                    Console.Write("y(Горизантально): ");
+                    y1 = Convert.ToInt32(Console.ReadLine());
+
+                } while (CheckPole(player, x1, y1));
+            }
             
             Console.WriteLine();
             if (player == 1)
@@ -92,14 +96,24 @@ namespace Game_cubs
         }
         static bool CheckPole(int player, int rx, int ry)
         {
-            if ((round == 0 || round == 1) && rx == 0 && ry == 0) return false;
             try
             {
-                if (Pole[rx, ry] == player) return false;
-                if (Pole[rx+1, ry] == player) return false;
-                if (Pole[rx, ry+1] == player) return false;
-                if (Pole[rx-1, ry] == player) return false;
-                if (Pole[rx, ry-1] == player) return false;
+                if (player == 1)
+                {
+                    if (Pole[rx, ry] == player) return false;
+                    if (Pole[rx + 1, ry] == player) return false;
+                    if (Pole[rx, ry + 1] == player) return false;
+                    if (Pole[rx - 1, ry] == player) return false;
+                    if (Pole[rx, ry - 1] == player) return false;
+                }
+                else
+                {
+                    if (Pole[x - 1 - rx, y - 1 - ry] == player) return false;
+                    if (Pole[x - 1 - rx + 1, y - 1 - ry] == player) return false;
+                    if (Pole[x - 1 - rx, y - 1 - ry + 1] == player) return false;
+                    if (Pole[x - 1 - rx - 1, y - 1 - ry] == player) return false;
+                    if (Pole[x - 1 - rx, y - 1 - ry - 1] == player) return false;
+                } 
             }
             catch
             {
